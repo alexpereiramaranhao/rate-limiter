@@ -1,0 +1,25 @@
+spring:
+    application:
+        name: rate-limiter
+    data:
+        redis:
+            database: 0
+            host: ${SPRING_REDIS_HOST}
+            password: '{REDIS_PASSWORD}'
+            port: ${SPRING_REDIS_PORT}
+            timeout: 60000
+configs:
+    limits:
+        -   key: STATUS
+            timeWindow: 60
+            maxRequests: 2
+        -   key: MARKETING
+            timeWindow: 3600
+            maxRequests: 3
+        -   key: STATUS_LIMITED
+            timeWindow: 120
+            maxRequests: -1
+        -   key: NEWS
+            timeWindow: 86400
+            maxRequests: 1
+

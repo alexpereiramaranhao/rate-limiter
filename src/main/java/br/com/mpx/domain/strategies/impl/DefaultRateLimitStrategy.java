@@ -1,30 +1,17 @@
 package br.com.mpx.domain.strategies.impl;
 
-import br.com.mpx.domain.enumeration.NotificationType;
+import br.com.mpx.domain.config.RateLimitConfig;
+import br.com.mpx.domain.repository.RateLimiterRepository;
 import br.com.mpx.domain.strategies.RateLimitStrategy;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class DefaultRateLimitStrategy implements RateLimitStrategy {
 
-    private final StringRedisTemplate redisTemplate;
+    private final RateLimiterRepository rateLimiterRepository;
 
     @Override
-    public boolean isAllowed(String recipient, NotificationType notificationType) {
-        String key = String.format("rate_limit:%s:%s",recipient, notificationType.name());
-
-        ValueOperations<String, String> operations = redisTemplate.opsForValue();
-
-        Optional<Long> currentCounter = Optional.ofNullable(operations.increment(key, 1));
-
-        if(currentCounter.orElse(1L) == 1) {
-            redisTemplate.expire(key, notificationType.getTimeWindow());
-        }
-
-        return currentCounter.orElse(1L) <= notificationType.getMaxRequest();
+    public boolean isAllowed(String recipient, RateLimitConfig rateLimitConfig) {
+        return rateLimiterRepository.applyOperationForRecipient(recipient, rateLimitConfig);
     }
 }
