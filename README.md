@@ -2,6 +2,7 @@
 
 This project implements a rate limiting system using Spring Boot and Redis. The goal is to control the number of requests a user can make within a specified time frame.
 
+![Architecture Diagram](src/main/resources/static/arch.png)
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/)
@@ -38,7 +39,11 @@ REDIS_PASSWORD="mypass"
 To start the application along with Redis, execute the following command in the project's root directory:
 
 ``` bash
-docker-compose up --build
+mvn clean package 
+```
+
+``` bash
+docker compose up --build
 ```
 
 This command will build the application's image and start the services defined in the docker-compose.yml file.
