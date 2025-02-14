@@ -7,19 +7,20 @@ import br.com.mpx.domain.factories.RateLimitStrategyFactory;
 import br.com.mpx.domain.strategies.RateLimitStrategy;
 import br.com.mpx.web.dto.NotificationRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class RateLimiterService {
 
     private  final RateLimitStrategyFactory strategyFactory;
     private final RateLimiterProperties rateLimiterProperties;
 
     public void sendNotification(NotificationRequest notificationRequest){
-        System.out.println("ratelimiteproperties");
-        System.out.println(rateLimiterProperties);
+        log.debug("Prepare to send notification: {}", notificationRequest);
 
         var rateLimitConfig = rateLimiterProperties.limits().stream().
                 filter(limit ->
@@ -28,16 +29,18 @@ public class RateLimiterService {
 
         this.verifyPermissionsToRequest(notificationRequest.getRecipient(), rateLimitConfig);
         //It's all ok. Send notification
+
+        log.debug("Notification sent successfully");
     }
 
     private void verifyPermissionsToRequest(String recipient, RateLimitConfig rateLimitConfig) {
-        System.out.println("ratelimiteproperties");
-
         RateLimitStrategy rateLimitStrategy = strategyFactory.getStrategy(rateLimitConfig);
 
         if(!rateLimitStrategy.isAllowed(recipient, rateLimitConfig)) {
+            log.debug("Rate limit exceeded for recipient: {}", recipient);
             throw  new RateLimitExceededException(String.format("Rate limit exceeded for recipient: %s", recipient));
         }
 
+        log.debug("Rate limit not exceeded for recipient: {}", recipient);
     }
 }
