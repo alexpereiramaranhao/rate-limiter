@@ -10,7 +10,7 @@ This project implements a rate limiting system using Spring Boot and Redis. The 
 
 Ensure that both Docker and Docker Compose are installed and functioning correctly on your machine.
 
-## Configuration
+## Run locally
 
 ### `docker-compose.yml` File
 
