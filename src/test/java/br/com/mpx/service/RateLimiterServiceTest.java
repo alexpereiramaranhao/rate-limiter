@@ -6,6 +6,7 @@ import br.com.mpx.domain.enumeration.NotificationType;
 import br.com.mpx.domain.exceptions.RateLimitExceededException;
 import br.com.mpx.domain.factories.RateLimitStrategyFactory;
 import br.com.mpx.domain.service.RateLimiterService;
+import br.com.mpx.domain.service.RateLimiterServiceImpl;
 import br.com.mpx.domain.strategies.RateLimitStrategy;
 import br.com.mpx.web.dto.NotificationRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,7 @@ class RateLimiterServiceTest {
     private RateLimitConfig rateLimitConfig;
 
     @InjectMocks
-    private RateLimiterService rateLimiterService;
+    private RateLimiterServiceImpl rateLimiterService;
 
     @BeforeEach
     public void setUp() {
